@@ -84,7 +84,23 @@ def main():
     df = df.drop(*drop_cols)
     df.show(5)
     df = df.na.drop('any')
+    # n_rows = df.count()
+    # train_size = int(0.6 * n_rows)
+    # val_test_size = n_rows - train_size
+    df.toPandas().to_csv('data.csv', index=False)
 
+    # train_df_us = df.limit(train_size)
+    # val_test_df_rows_us = df.tail(val_test_size)
+    # val_test_df = spark.createDataFrame(val_test_df_rows_us)
+    # val_df_us = val_test_df.limit(val_test_size // 2)
+    # test_df_rows_us = val_test_df.tail(val_test_size // 2)
+    # test_df_us = spark.createDataFrame(test_df_rows_us)
+
+    # Other CSV options
+    # train_df_us.toPandas().to_csv("train_unscaled.csv", index=False)
+    # val_df_us.toPandas().to_csv("val_unscaled.csv", index=False)
+    # test_df_us.toPandas().to_csv("test_unscaled.csv", index=False)
+    
     high_corr_features = list(high_corr_features)
     # high_corr_features.remove('close')
 
@@ -187,43 +203,43 @@ def main():
     # logging.info(y_train.shape)
     # logging.info(y_test[0])
     # logging.info(X_train.shape)
-    model = Sequential()
-    model.add(Dense(256, input_shape=(input_dim,), activation='relu'))
-    model.add(Dense(256, activation='relu'))
-    model.add(Dense(128, activation='relu'))
-    model.add(Dense(1, activation='linear'))
+    # model = Sequential()
+    # model.add(Dense(256, input_shape=(input_dim,), activation='relu'))
+    # model.add(Dense(256, activation='relu'))
+    # model.add(Dense(128, activation='relu'))
+    # model.add(Dense(1, activation='linear'))
 
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    # model.compile(loss='mean_squared_error', optimizer='adam')
 
-    model.summary()
+    # model.summary()
 
-    # Set and Serialize Optimizer
-    optimizer_conf = Adam(learning_rate=0.001)
-    opt_conf = serialize(optimizer_conf)
+    # # Set and Serialize Optimizer
+    # optimizer_conf = Adam(learning_rate=0.001)
+    # opt_conf = serialize(optimizer_conf)
 
-    # Initialize SparkML Estimator and Get Settings
-    estimator = ElephasEstimator()
-    estimator.setFeaturesCol("scaled_features")
-    estimator.setLabelCol("target_close")
-    estimator.set_keras_model_config(model.to_json())
-    estimator.set_num_workers(1)
-    estimator.set_epochs(25) 
-    estimator.set_batch_size(32)
-    estimator.set_verbosity(1)
-    estimator.set_validation_split(0.1)
-    estimator.set_optimizer_config(opt_conf)
-    estimator.set_mode("synchronous")
-    estimator.set_loss("mean_squared_error")
-    estimator.set_metrics(['mean_squared_error', 'mean_absolute_error'])
-    estimator.set_categorical_labels(False)
+    # # Initialize SparkML Estimator and Get Settings
+    # estimator = ElephasEstimator()
+    # estimator.setFeaturesCol("scaled_features")
+    # estimator.setLabelCol("target_close")
+    # estimator.set_keras_model_config(model.to_json())
+    # estimator.set_num_workers(1)
+    # estimator.set_epochs(25) 
+    # estimator.set_batch_size(32)
+    # estimator.set_verbosity(1)
+    # estimator.set_validation_split(0.1)
+    # estimator.set_optimizer_config(opt_conf)
+    # estimator.set_mode("synchronous")
+    # estimator.set_loss("mean_squared_error")
+    # estimator.set_metrics(['mean_squared_error', 'mean_absolute_error'])
+    # estimator.set_categorical_labels(False)
 
-    # Create Deep Learning Pipeline
-    dl_pipeline = Pipeline(stages=[estimator])
+    # # Create Deep Learning Pipeline
+    # dl_pipeline = Pipeline(stages=[estimator])
 
-    dl_pipeline_fit_score_results(dl_pipeline=dl_pipeline,
-                                  train_data=train_df,
-                                  test_data=test_df,
-                                  label='target_close');
+    # dl_pipeline_fit_score_results(dl_pipeline=dl_pipeline,
+    #                               train_data=train_df,
+    #                               test_data=test_df,
+    #                               label='target_close');
 
 if __name__ == '__main__':
     main()
