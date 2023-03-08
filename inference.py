@@ -10,7 +10,7 @@ y_test = np.load('y_test.npy')
 X_test_tensor = tf.constant(X_test)
 best_model = load_model('best_dnn.h5')
 y_pred = best_model.predict(X_test_tensor)
-y_pred_np = y_pred.numpy().reshape(-1, 1)
+y_pred_np = y_pred.reshape(-1, 1)
 
 
 with open('target_mms.pkl', 'rb') as f:
