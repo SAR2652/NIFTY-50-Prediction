@@ -6,41 +6,41 @@ from pyspark.mllib.evaluation import RegressionMetrics
 from pyspark.sql.functions import lag
 from pyspark.sql.window import Window
 
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.optimizers import Adam, serialize
+# from tensorflow.keras.models import Sequential
+# from tensorflow.keras.layers import Dense
+# from tensorflow.keras.optimizers import Adam, serialize
 
-from elephas.ml_model import ElephasEstimator
+# from elephas.ml_model import ElephasEstimator
 
-def dl_pipeline_fit_score_results(dl_pipeline,
-                                  train_data,
-                                  test_data,
-                                  label='target_close'):
+# def dl_pipeline_fit_score_results(dl_pipeline,
+#                                   train_data,
+#                                   test_data,
+#                                   label='target_close'):
     
-    fit_dl_pipeline = dl_pipeline.fit(train_data)
-    pred_train = fit_dl_pipeline.transform(train_data)
-    pred_test = fit_dl_pipeline.transform(test_data)
+#     fit_dl_pipeline = dl_pipeline.fit(train_data)
+#     pred_train = fit_dl_pipeline.transform(train_data)
+#     pred_test = fit_dl_pipeline.transform(test_data)
     
-    pnl_train = pred_train.select(label, "prediction")
-    pnl_test = pred_test.select(label, "prediction")
+#     pnl_train = pred_train.select(label, "prediction")
+#     pnl_test = pred_test.select(label, "prediction")
     
-    pred_and_label_train = pnl_train.rdd.map(lambda row: (row[label], row['prediction']))
-    pred_and_label_test = pnl_test.rdd.map(lambda row: (row[label], row['prediction']))
+#     pred_and_label_train = pnl_train.rdd.map(lambda row: (row[label], row['prediction']))
+#     pred_and_label_test = pnl_test.rdd.map(lambda row: (row[label], row['prediction']))
     
-    metrics_train = RegressionMetrics(pred_and_label_train)
-    metrics_test = RegressionMetrics(pred_and_label_test)
+#     metrics_train = RegressionMetrics(pred_and_label_train)
+#     metrics_test = RegressionMetrics(pred_and_label_test)
     
-    train_rmse = round(metrics_train.rootMeanSquaredError(), 4)
-    train_r2 = round(metrics_train.r2(), 4)
+#     train_rmse = round(metrics_train.rootMeanSquaredError(), 4)
+#     train_r2 = round(metrics_train.r2(), 4)
     
-    logging.info(f"Training Data RMSE = {train_rmse}")
-    logging.info(f"Training Data R^2 = {train_r2}")
+#     logging.info(f"Training Data RMSE = {train_rmse}")
+#     logging.info(f"Training Data R^2 = {train_r2}")
     
-    test_rmse = round(metrics_test.rootMeanSquaredError(), 4)
-    test_r2 = round(metrics_test.r2(), 4)
+#     test_rmse = round(metrics_test.rootMeanSquaredError(), 4)
+#     test_r2 = round(metrics_test.r2(), 4)
     
-    logging.info(f"Test Data RMSE = {test_rmse}")
-    logging.info(f"Test Data R^2 = {test_r2}")
+#     logging.info(f"Test Data RMSE = {test_rmse}")
+#     logging.info(f"Test Data R^2 = {test_r2}")
 
 
 def main():
